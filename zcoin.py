@@ -64,6 +64,7 @@ class zCoin:
             except ValueError:
                 return
             else:
+                print data
                 data['ip'] = ip
                 if "cmd" in data:
                     if data['cmd']  in self.cmds:

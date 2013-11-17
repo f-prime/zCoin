@@ -14,21 +14,17 @@ def check_difficulty():
         s = socket.socket()
         try:
             s.settimeout(1)
-            s.connect((x[0], x[1]))
+            s.connect(x)
         except:
             s.close()
             continue
         else:
-            s.send(json.dumps({"cmd":"get_difficulty"}))
+            s.send(json.dumps({"cmd":"get_raw_difficulty"}))
             data = s.recv(1024)
-            print data
-            try:
-                data = json.loads(data)
-            except:
-                continue
-            s.close()
-            return data
-        s.close()
+            if data:
+                s.close()
+                return {"difficulty":int(data)}
+
 
 def check_coin(data):
     node = sqlite3.connect("nodes.db")
@@ -56,7 +52,8 @@ def mine():
         on = 0
         while True:
             c = hashlib.sha512(starter+str(on)).hexdigest()
-            startswith = "1"*check['difficulty']
+            startswith = "1"*check['difficulty'] 
+
             if c.startswith(startswith):
                 print c
                 wall = sqlite3.connect("wallet.db")
