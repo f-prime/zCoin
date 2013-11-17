@@ -43,11 +43,11 @@ def send_coin_send(address, amount):
                  'starter': starter,
                  'hash': hash_}
                 send_coin_do(out)
-
+            return "Coins sent successfully"
         else:
             return "Invalid Key"
     else:
-        return "Address does not exist."
+        return "Address does not exist"
 
 
 def send_coin_do(out):

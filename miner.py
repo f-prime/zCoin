@@ -55,7 +55,6 @@ def mine():
         starter = ''.join([random.choice(string.uppercase+string.lowercase+string.digits) for x in range(5)])
         on = 0
         while True:
-            print starter+str(on)
             c = hashlib.sha512(starter+str(on)).hexdigest()
             startswith = "1"*check['difficulty']
             if c.startswith(startswith):
