@@ -67,7 +67,6 @@ class zCoin:
                 data['ip'] = ip
                 if "cmd" in data:
                     if data['cmd']  in self.cmds:
-                        print data
                         self.cmds[data['cmd']](obj, data)
         obj.close()
 
