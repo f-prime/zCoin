@@ -50,10 +50,10 @@ def mine():
         check = check_difficulty()
         starter = ''.join([random.choice(string.uppercase+string.lowercase+string.digits) for x in range(5)])
         on = 0
+        print check
         while True:
             c = hashlib.sha512(starter+str(on)).hexdigest()
             startswith = "1"*check['difficulty'] 
-
             if c.startswith(startswith):
                 print c
                 wall = sqlite3.connect("wallet.db")
