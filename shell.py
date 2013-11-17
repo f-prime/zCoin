@@ -19,7 +19,7 @@ class zCoinShell(cmd.Cmd):
     def do_totalcoins(self, line):
         coins = sqlite3.connect("db.db").cursor()
         coins.execute("SELECT * FROM coins")
-        print "There are "+str(len(coins.fetchall()))+" coins in existance."
+        print "There are "+str(len(coins.fetchall()))+" coins in existence."
     def do_send(self, line):
         line = line.split() 
         to = line[0]
