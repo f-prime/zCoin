@@ -4,6 +4,7 @@ import json
 import random
 import string
 import sqlite3
+import threading
 
 def check_difficulty():
     db = sqlite3.connect("nodes.db")
@@ -52,6 +53,7 @@ def mine():
         on = 0
         print check
         while True:
+            print starter+str(on)
             c = hashlib.sha512(starter+str(on)).hexdigest()
             startswith = "1"*check['difficulty'] 
             if c.startswith(startswith):
@@ -63,4 +65,7 @@ def mine():
                 break
             else:
                 on += 1
+
+#for x in range(5):
+ #   threading.Thread(target=mine).start()
 mine()
