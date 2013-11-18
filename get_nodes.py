@@ -8,7 +8,10 @@ import hashlib
 
 def get_nodes(obj, data):
     with open("nodes.db", 'rb') as file:
-        for x in file.readlines(1020):
+        while True:
+            x = file.read(100)
+            if not x:
+                break
             md5sum = hashlib.md5(x).hexdigest()
             out = base64.b64encode(x)
             x = json.dumps({"md5sum":md5sum, "data":out})
@@ -36,14 +39,19 @@ def get_nodes_send(god=False):
         else:
             s.send(json.dumps(cmd))
             out = ""
+            current = ""
             while True:
-                data = s.recv(10240)
+                data = s.recv(1)
                 if data:
+                    current = current + data
+                    if data != "}":
+                        continue
                     try:
-                        data = json.loads(data)
+                        data = json.loads(current)
                     except ValueError:
                         break
                     else:
+                        current = ""
                         check = base64.b64decode(data['data'])
                         if hashlib.md5(check).hexdigest() == data['md5sum']:
                             out = out + check

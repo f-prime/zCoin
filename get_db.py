@@ -12,7 +12,8 @@ def get_db(obj, data):
     db.execute("CREATE TABLE IF NOT EXISTS coins (hash TEXT, address TEXT, starter TEXT)")
     db.execute("CREATE TABLE IF NOT EXISTS transactions (to_ TEXT, from_ TEXT, hash TEXT)")
     with open("db.db", 'rb') as file:
-        for x in file.readlines(1020):
+        while True:
+            x = file.read(100)
             md5sum = hashlib.md5(x).hexdigest()
             out = base64.b64encode(x)
             x = json.dumps({"md5sum":md5sum, "data":out})
@@ -38,14 +39,19 @@ def get_db_send():
         else:
             s.send(json.dumps(cmd))
             out = ""
+            current = ""
             while True:
                 data = s.recv(10240)
                 if data:
+                    current = current + data
+                    if data != "}":
+                        continue
                     try:
-                        data = json.loads(data)
+                        data = json.loads(current)
                     except ValueError:
                         break
                     else:
+                        current = ""
                         check = base64.b64decode(data['data'])
                         if hashlib.md5(check).hexdigest() == data['md5sum']:
                             out = out + check

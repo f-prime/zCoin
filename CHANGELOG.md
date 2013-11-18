@@ -1,3 +1,8 @@
+0.0.3
+=====
+
+* Better handling of get_db and get_nodes
+
 0.0.2
 =====
 
