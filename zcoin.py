@@ -32,7 +32,7 @@ class zCoin:
     def first_run(self):
         print "Generating address..."
         pub, priv = newkeys(1024)
-        address = "Z"+''.join([random.choice(string.uppercase+string.lowercase+string.digits) for x in range(25)])
+        address = "Z"+''.join([random.choice(string.uppercase+string.lowercase+string.digits) for x in range(50)])
         print "Your address is "+address
         wallet = sqlite3.connect("wallet.db")
         db = sqlite3.connect("db.db")
