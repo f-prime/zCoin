@@ -14,6 +14,8 @@ def get_db(obj, data):
     with open("db.db", 'rb') as file:
         while True:
             x = file.read(100)
+            if not x:
+                break
             md5sum = hashlib.md5(x).hexdigest()
             out = base64.b64encode(x)
             x = json.dumps({"md5sum":md5sum, "data":out})
