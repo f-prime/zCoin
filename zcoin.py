@@ -91,11 +91,6 @@ class zCoin:
             nodes.commit()
             print "All good"
         
-        check = get_version.get_version_send()
-        if check:
-            if check['version'] != config.version:
-                print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
-                return
         get_nodes.get_nodes_send()
         get_db.get_db_send()
         register.register_send()
@@ -108,25 +103,24 @@ class zCoin:
             thread.start_new_thread(self.handle, (obj, conn[0]))
 
     def non_relay(self):
-        check = get_version.get_version_send()
-        if check:
-            if check['version'] != config.version:
-                print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
-                return
         while True:
             get_nodes.get_nodes_send()
             get_db.get_db_send()
             time.sleep(60)
 
 if __name__ == "__main__":
-    wallet = sqlite3.connect("wallet.db")
-    try:
-        wallet.execute("SELECT * FROM data")
-    except:
-        zCoin().first_run()
-    if config.relay:
-        zCoin().relay()
+    check = get_version.get_version_send()
+    if check['version'] != config.version:
+        print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
     else:
-        print "zCoin has started as a normal node."
-        register.register_send()
-        zCoin().non_relay()
+        wallet = sqlite3.connect("wallet.db")
+        try:
+            wallet.execute("SELECT * FROM data")
+        except:
+            zCoin().first_run()
+        if config.relay:
+            zCoin().relay()
+        else:
+            print "zCoin has started as a normal node."
+            register.register_send()
+            zCoin().non_relay()
