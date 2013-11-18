@@ -1,0 +1,5 @@
+0.0.2
+=====
+
+* Nodes now do a check of version and will not communicate with other versions of nodes.
+* get_nodes now does a check sum on each segment. If the hashes do not match it will be rejected.

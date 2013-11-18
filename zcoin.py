@@ -13,6 +13,7 @@ import string
 import get_difficulty
 import check_coin
 import send_coin
+import get_version
 
 class zCoin:
     def __init__(self):
@@ -26,7 +27,7 @@ class zCoin:
                 "check_coin":check_coin.check_coin,
                 "confirm_coin":check_coin.confirm_coin,
                 "send_coin":send_coin.send_coin,
-
+                "get_version":get_version.get_version,
         }   
 
     def first_run(self):
@@ -89,7 +90,12 @@ class zCoin:
             nodes.execute("INSERT INTO data (address, ip, port, public, relay) VALUES (?, ?, ?, ?, ?)", [address, ip, port, public, relay])
             nodes.commit()
             print "All good"
-
+        
+        check = get_version.get_version_send()
+        if check:
+            if check['version'] != config.version:
+                print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
+                return
         get_nodes.get_nodes_send()
         get_db.get_db_send()
         register.register_send()
@@ -102,6 +108,11 @@ class zCoin:
             thread.start_new_thread(self.handle, (obj, conn[0]))
 
     def non_relay(self):
+        check = get_version.get_version_send()
+        if check:
+            if check['version'] != config.version:
+                print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
+                return
         while True:
             get_nodes.get_nodes_send()
             get_db.get_db_send()

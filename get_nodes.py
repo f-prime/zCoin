@@ -3,31 +3,26 @@ import json
 import config
 import random
 import sqlite3
-
-"""
-
-Added: 11/16/13 12:08 AM
-
-This is the code for the "get_nodes" command, a command that will send or retrieve the global database of nodes.
-
-{"cmd":"get_nodes"}
-
-"""
+import base64
+import hashlib
 
 def get_nodes(obj, data):
     with open("nodes.db", 'rb') as file:
         for x in file.readlines(1020):
+            md5sum = hashlib.md5(x).hexdigest()
+            out = base64.b64encode(x)
+            x = json.dumps({"md5sum":md5sum, "data":out})
             obj.send(x)
 
 def get_nodes_send(god=False):
     node = sqlite3.connect("nodes.db")
     cmd = {"cmd":"get_nodes"}
     nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+    if not nodes:
+        return
     nodes = nodes.fetchall()
     if god:
         nodes = config.brokers
-    if not nodes:
-        return
     random.shuffle(nodes)
     for x in nodes:
         
@@ -42,12 +37,20 @@ def get_nodes_send(god=False):
             s.send(json.dumps(cmd))
             out = ""
             while True:
-                data = s.recv(1024)
+                data = s.recv(10240)
                 if data:
-                    out = out + data
+                    try:
+                        data = json.loads(data)
+                    except ValueError:
+                        break
+                    else:
+                        check = base64.b64decode(data['data'])
+                        if hashlib.md5(check).hexdigest() == data['md5sum']:
+                            out = out + check
+                        else:
+                            break
                 else:
                     break
-
             
             with open("nodes.db", 'wb') as file:
                 file.write(out)
