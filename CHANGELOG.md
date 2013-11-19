@@ -1,3 +1,8 @@
+0.0.8
+=====
+
+* Fixed the eval() exploit. 
+
 0.0.3
 =====
 

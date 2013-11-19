@@ -3,6 +3,7 @@ import sqlite3
 import json
 from rsa import *
 import base64
+import re
 
 def send_coin_send(address, amount):
     """
@@ -28,8 +29,24 @@ def send_coin_send(address, amount):
         key = check[0][0]
     
         if key.startswith('PublicKey(') and key.endswith(')'):
-            key = eval(key)
-            my_key = eval(my_key)
+            key = re.findall("([0-9]*)", key)
+            key = filter(None, key)
+            try:
+                int(key[0])
+                int(key[1])
+            except:
+                return "Address has an invalid PublicKey"
+
+            key = PublicKey(int(key[0]), int(key[1]))
+            
+            my_key = re.findall("([0-9]*)", my_key)
+            my_key = filter(None, my_key)
+            try:
+                int(my_key[0])
+                int(my_key[1])
+            except:
+                return "You have an invalid PrivateKey"
+            my_key = PrivateKey(int(my_key[0]), int(my_key[1]))
             check_coins = db.execute('SELECT starter, hash FROM coins WHERE address=?', [my_address])
             check_coins = check_coins.fetchall()
             if len(check_coins) < amount:
