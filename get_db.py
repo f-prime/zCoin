@@ -47,6 +47,7 @@ def get_db_send():
                 try:
                     data = s.recv(1)
                 except:
+                    no = True
                     break
                 if data:
                     current = current + data
