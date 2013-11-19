@@ -41,7 +41,10 @@ def get_nodes_send(god=False):
             out = ""
             current = ""
             while True:
-                data = s.recv(1)
+                try:
+                    data = s.recv(1)
+                except:
+                    pass
                 if data:
                     current = current + data
                     if data != "}":

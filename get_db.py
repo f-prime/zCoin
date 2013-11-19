@@ -43,7 +43,10 @@ def get_db_send():
             out = ""
             current = ""
             while True:
-                data = s.recv(1)
+                try:
+                    data = s.recv(1)
+                except:
+                    continue
                 if data:
                     current = current + data
                     if data != "}":
