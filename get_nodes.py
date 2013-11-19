@@ -40,11 +40,13 @@ def get_nodes_send(god=False):
             s.send(json.dumps(cmd))
             out = ""
             current = ""
+            no = False
             while True:
                 try:
                     data = s.recv(1)
                 except:
-                    pass
+                    no = True
+                    break
                 if data:
                     current = current + data
                     if data != "}":
@@ -62,6 +64,6 @@ def get_nodes_send(god=False):
                             break
                 else:
                     break
-            
-            with open("nodes.db", 'wb') as file:
-                file.write(out)
+            if not no:
+                with open("nodes.db", 'wb') as file:
+                    file.write(out)

@@ -42,11 +42,12 @@ def get_db_send():
             s.send(json.dumps(cmd))
             out = ""
             current = ""
+            no = False
             while True:
                 try:
                     data = s.recv(1)
                 except:
-                    continue
+                    break
                 if data:
                     current = current + data
                     if data != "}":
@@ -64,6 +65,6 @@ def get_db_send():
                             break
                 else:
                     break
-            
-            with open("db.db", 'wb') as file:
-                file.write(out)
+            if not no:
+                with open("db.db", 'wb') as file:
+                    file.write(out)
