@@ -5,6 +5,7 @@ import random
 import sqlite3
 import base64
 import hashlib
+import register, get_nodes, get_db
 
 def get_db(obj, data):
     db = sqlite3.connect("db.db").cursor()

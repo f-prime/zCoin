@@ -5,6 +5,7 @@ import random
 import sqlite3
 import base64
 import hashlib
+import register, get_nodes, get_db
 
 def get_nodes(obj, data):
     with open("nodes.db", 'rb') as file:

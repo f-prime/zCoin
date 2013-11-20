@@ -3,6 +3,7 @@ import socket
 import config
 import random
 import sqlite3
+import register, get_nodes, get_db
 
 def register(obj, data):
     check = sqlite3.connect("nodes.db") 
