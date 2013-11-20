@@ -3,7 +3,7 @@ import socket
 import config
 import random
 import sqlite3
-import register, get_nodes, get_db
+import get_nodes, get_db
 
 def register(obj, data):
     check = sqlite3.connect("nodes.db") 
@@ -25,7 +25,7 @@ def register_send(god=False):
     except sqlite3.OperationalError:
         get_nodes.get_nodes_send(True)
         get_db.get_db_send()
-        register.register_send()
+        register_send()
         return
     nodes = nodes.fetchall()
     if god:

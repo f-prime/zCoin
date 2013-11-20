@@ -5,7 +5,7 @@ import random
 import sqlite3
 import base64
 import hashlib
-import register, get_nodes, get_db
+import register, get_nodes
 
 def get_db(obj, data):
     db = sqlite3.connect("db.db").cursor()
@@ -29,7 +29,7 @@ def get_db_send():
         nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
     except sqlite3.OperationalError:
         get_nodes.get_nodes_send(True)
-        get_db.get_db_send()
+        get_db_send()
         register.register_send()
         return
     if not nodes:
