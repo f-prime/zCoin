@@ -4,6 +4,7 @@ import json
 from rsa import *
 import base64
 import re
+import hashlib
 
 def send_coin_send(address, amount):
     """
@@ -55,7 +56,6 @@ def send_coin_send(address, amount):
                  'starter': starter,
                  'hash': hash_}
                 send_coin_do(out)
-            return "Coins sent successfully"
         else:
             return "Invalid Key"
     else:
@@ -83,6 +83,8 @@ def send_coin_do(out):
 
 
 def send_coin(obj, data):
+    if hashlib.sha512(data['starter']).hexdigest() != data['hash']:
+        return
     db = sqlite3.connect('db.db')
     db.execute('UPDATE coins SET address=?, starter=? WHERE hash=?', [data['for'], data['starter'], data['hash']])
     db.execute("INSERT INTO transactions (to_, from_, hash) VALUES (?, ?, ?)", [data['for'], data['starter'], data['hash']])

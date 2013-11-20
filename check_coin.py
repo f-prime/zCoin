@@ -57,7 +57,7 @@ def confirm_coin(obj, data):
     db = db_.cursor()
     check = get_difficulty.get_difficulty(None, None)
     db.execute("SELECT * FROM coins WHERE hash=?", [data['hash']])
-    if data['hash'].startswith("1"*check['difficulty']) and len(data['hash']) == 128 and not db.fetchall():
+    if data['hash'].startswith("1"*check['difficulty']) and len(data['hash']) == 128 and not db.fetchall() and hashlib.sha512(data['starter']).hexdigest() == data['hash']:
         db_.execute("UPDATE difficulty SET level=? WHERE level=?", [data['difficulty'], check['difficulty']])
         db_.execute("INSERT INTO coins (starter, hash, address) VALUES (?, ?, ?)", [data['starter'], data['hash'], data['address']])
         db_.commit()
