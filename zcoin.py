@@ -119,9 +119,10 @@ if __name__ == "__main__":
         check = get_version.get_version_send()
         if check['version'] != config.version:
             print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
-        update = True
+            update = True
     except:
         print "Couldn't get current zCoin version from any of the brokers, they all must be down. I suggest you restart your client in a bit to check again."
+    print update
     if not update:
         wallet = sqlite3.connect("wallet.db")
         try:
