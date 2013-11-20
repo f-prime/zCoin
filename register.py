@@ -19,7 +19,13 @@ def register_send(god=False):
     data = wallet.execute("SELECT address, public FROM data")
     data = data.fetchall()[0]
     cmd = {"cmd":"register", "address":data[0], "public":data[1], "port":config.port, "relay":config.relay}
-    nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+    try:
+        nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+    except sqlite3.OperationalError:
+        get_nodes.get_nodes_send(True)
+        get_db.get_db_send()
+        register.register_send()
+        return
     nodes = nodes.fetchall()
     if god:
         nodes = config.brokers

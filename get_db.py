@@ -24,7 +24,13 @@ def get_db(obj, data):
 def get_db_send():
     node = sqlite3.connect("nodes.db")
     cmd = {"cmd":"get_db"}
-    nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+    try:
+        nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+    except sqlite3.OperationalError:
+        get_nodes.get_nodes_send(True)
+        get_db.get_db_send()
+        register.register_send()
+        return
     if not nodes:
         return
     nodes = nodes.fetchall()

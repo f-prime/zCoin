@@ -23,7 +23,13 @@ def get_nodes_send(god=False):
     if god:
         nodes = config.brokers
     else:
-        nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+        try:
+            nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+        except sqlite3.OperationalError:
+            get_nodes.get_nodes_send(True)
+            get_db.get_db_send()
+            register.register_send()
+            return
         nodes = nodes.fetchall()
     if not nodes:
         return
