@@ -20,12 +20,13 @@ def get_nodes(obj, data):
 def get_nodes_send(god=False):
     node = sqlite3.connect("nodes.db")
     cmd = {"cmd":"get_nodes"}
-    nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
-    if not nodes:
-        return
-    nodes = nodes.fetchall()
     if god:
         nodes = config.brokers
+    else:
+        nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+        nodes = nodes.fetchall()
+    if not nodes:
+        return
     random.shuffle(nodes)
     for x in nodes:
         

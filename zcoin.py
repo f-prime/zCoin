@@ -14,6 +14,7 @@ import get_difficulty
 import check_coin
 import send_coin
 import get_version
+import sys
 
 class zCoin:
     def __init__(self):
@@ -109,6 +110,10 @@ class zCoin:
             time.sleep(60)
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "-fixdb":
+            get_nodes.get_nodes_send(god=True)
+            get_db.get_db_send()
     check = get_version.get_version_send()
     if check['version'] != config.version:
         print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
