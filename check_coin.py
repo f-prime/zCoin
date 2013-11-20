@@ -14,9 +14,6 @@ def check_coin(obj, data):
     """
     check = sqlite3.connect("db.db")
     check.execute("SELECT * FROM coins WHERE hash=?")
-    if check.fetchall():
-        obj.send(json.dumps({"response":"Coin already exists."}))
-        return 
     node = sqlite3.connect("nodes.db").cursor()
     c = node.execute("SELECT public FROM data WHERE address=?", [data['address']])
     c = c.fetchall()
