@@ -53,7 +53,7 @@ def mine():
         on = 0
         print check
         while True:
-            print starter+str(on)
+#            print starter+str(on)
             c = hashlib.sha512(starter+str(on)).hexdigest()
             startswith = "1"*check['difficulty'] 
             if c.startswith(startswith):
@@ -66,6 +66,6 @@ def mine():
             else:
                 on += 1
 
-#for x in range(5):
- #   threading.Thread(target=mine).start()
-mine()
+for x in range(15):
+    threading.Thread(target=mine).start()
+#mine()
