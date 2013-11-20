@@ -114,18 +114,21 @@ if __name__ == "__main__":
         if sys.argv[1] == "-fixdb":
             get_nodes.get_nodes_send(god=True)
             get_db.get_db_send()
-    check = get_version.get_version_send()
-    if check['version'] != config.version:
-        print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
+    try:
+        check = get_version.get_version_send()
+        if check['version'] != config.version:
+            print "Your version of zCoin is out of date. Please download the latest verion of zCoin from Github."
+    except:
+        print "Couldn't get current zCoin version from any of the brokers, they all must be down. I suggest you restart your client in a bit to check again."
+
+    wallet = sqlite3.connect("wallet.db")
+    try:
+        wallet.execute("SELECT * FROM data")
+    except:
+        zCoin().first_run()
+    if config.relay:
+        zCoin().relay()
     else:
-        wallet = sqlite3.connect("wallet.db")
-        try:
-            wallet.execute("SELECT * FROM data")
-        except:
-            zCoin().first_run()
-        if config.relay:
-            zCoin().relay()
-        else:
-            print "zCoin has started as a normal node."
-            register.register_send()
-            zCoin().non_relay()
+        print "zCoin has started as a normal node."
+        register.register_send()
+        zCoin().non_relay()
