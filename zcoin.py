@@ -134,7 +134,6 @@ if __name__ == "__main__":
             print "zCoin has started as a normal node."
             register.register_send()
             zCoin().non_relay()
-=======
             return
     except:
         print "Couldn't get current zCoin version from any of the brokers, they all must be down. I suggest you restart your client in a bit to check again."
@@ -150,4 +149,3 @@ if __name__ == "__main__":
         print "zCoin has started as a normal node."
         register.register_send()
         zCoin().non_relay()
->>>>>>> e821c44cba94a202a2e713c552bcb3683ca3da7f
