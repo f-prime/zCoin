@@ -1,10 +1,11 @@
 import socket
 import json
 import sqlite3
+import config
 
 def get_difficulty(obj, data):
     node = sqlite3.connect("nodes.db")
-    nodes = node.execute("SELECT ip, port FROM data WHERE relay=1")
+    nodes = node.execute("SELECT ip, port FROM data WHERE relay=1 AND version=?", [config.version])
     nodes = nodes.fetchall()
     difficulties = []
     for x in nodes:

@@ -1,3 +1,9 @@
+0.1.5
+=====
+
+* Nodes now only communicate with nodes that are on the same version.
+
+
 0.1.4
 =====
 

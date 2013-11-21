@@ -26,7 +26,7 @@ def get_db_send():
     node = sqlite3.connect("nodes.db")
     cmd = {"cmd":"get_db"}
     try:
-        nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+        nodes = node.execute("SELECT ip, port FROM data WHERE relay=? AND version=?", [True, config.version])
     except sqlite3.OperationalError:
         get_nodes.get_nodes_send(True)
         get_db_send()

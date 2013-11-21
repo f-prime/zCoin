@@ -39,7 +39,7 @@ class zCoin:
         wallet = sqlite3.connect("wallet.db")
         db = sqlite3.connect("db.db")
         nodes = sqlite3.connect("nodes.db")
-        nodes.execute("CREATE TABLE IF NOT EXISTS data (address TEXT, relay INT, port INT,  public TEXT, ip TEXT)")
+        nodes.execute("CREATE TABLE IF NOT EXISTS data (address TEXT, relay INT, port INT,  public TEXT, ip TEXT, version TEXT)")
         db.execute("CREATE TABLE IF NOT EXISTS difficulty (level INT)")
         db.execute("CREATE TABLE IF NOT EXISTS  coins (starter TEXT, address TEXT, hash TEXT)")
         db.execute("CREATE TABLE IF NOT EXISTS transactions (to_ TEXT, from_ TEXT, hash TEXT)")
@@ -88,7 +88,7 @@ class zCoin:
             out = wallet.fetchall()
             address = out[0][0]
             public = out[0][1]
-            nodes.execute("INSERT INTO data (address, ip, port, public, relay) VALUES (?, ?, ?, ?, ?)", [address, ip, port, public, relay])
+            nodes.execute("INSERT INTO data (address, ip, port, public, relay, version) VALUES (?, ?, ?, ?, ?, ?)", [address, ip, port, public, relay, config.version])
             nodes.commit()
             print "All good"
         

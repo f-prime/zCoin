@@ -5,6 +5,7 @@ from rsa import *
 import hashlib
 import base64
 import sqlite3
+import config
 
 def check_coin(obj, data):
     """
@@ -39,7 +40,7 @@ def check_coin(obj, data):
 
 def send_confirm(data):
     nodes = sqlite3.connect("nodes.db").cursor()
-    nodes = nodes.execute("SELECT ip, port FROM data WHERE relay=1")
+    nodes = nodes.execute("SELECT ip, port FROM data WHERE relay=1 AND version=?", [config.version])
     for x in nodes:
         s = socket.socket()
         try:

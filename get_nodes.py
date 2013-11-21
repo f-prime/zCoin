@@ -25,7 +25,7 @@ def get_nodes_send(god=False):
         nodes = config.brokers
     else:
         try:
-            nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
+            nodes = node.execute("SELECT ip, port FROM data WHERE relay=? AND version=?", [True, config.version])
         except sqlite3.OperationalError:
             get_nodes_send(True)
             get_db.get_db_send()

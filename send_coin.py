@@ -5,6 +5,7 @@ from rsa import *
 import base64
 import re
 import hashlib
+import config
 
 def send_coin_send(address, amount):
     """
@@ -68,7 +69,7 @@ def send_coin_send(address, amount):
 def send_coin_do(out):
     node = sqlite3.connect('nodes.db').cursor()
     to_send = json.dumps(out)
-    nodes = node.execute('SELECT ip, port FROM data WHERE relay=1')
+    nodes = node.execute('SELECT ip, port FROM data WHERE relay=1 AND version=?', [config.version])
     if not nodes:
         return
     for x in nodes:
