@@ -6,6 +6,7 @@ import hashlib
 import base64
 import sqlite3
 import config
+import re
 
 def check_coin(obj, data):
     """
@@ -13,19 +14,24 @@ def check_coin(obj, data):
         {"address":<addr>, "hash":<hash>, "starter":<starter>}
 
     """
-    check = sqlite3.connect("db.db")
+    check = sqlite3.connect("db.db").cursor()
     check.execute("SELECT * FROM coins WHERE hash=?", [data['hash']])
+    if check.fetchall():
+        print "Coin already exists"
+        return
     node = sqlite3.connect("nodes.db").cursor()
     c = node.execute("SELECT public FROM data WHERE address=?", [data['address']])
     c = c.fetchall()
-    difficulty = get_difficulty.get_difficulty(None, None)
+    check.execute("SELECT level FROM difficulty")
+    difficulty = check.fetchall()[0][0]
     if c:
         c = c[0]
         if len(data['hash']) == 128:
-            if hashlib.sha512(str(data['starter'])).hexdigest() == data['hash'] and data['hash'].startswith("1"*difficulty['difficulty']):
+            if hashlib.sha512(str(data['starter'])).hexdigest() == data['hash'] and data['hash'].startswith("1"*int(difficulty)):
                 if c[0].startswith("PublicKey(") and c[0].endswith(")"):
-                    key = eval(c[0])
-                    
+                    key = re.findall("([0-9]*)", c[0])
+                    key = filter(None, key)
+                    key = PublicKey(int(key[0]), int(key[1]))
                 data['starter'] = base64.b64encode(encrypt(str(data['starter']), key))
                 obj.send(json.dumps({"response":"Coin Confirmed!"}))
                 try:
@@ -37,6 +43,7 @@ def check_coin(obj, data):
                 send_confirm(data)
             else:
                 obj.send(json.dumps({"response":"Invalid Coin!"}))
+        
 
 def send_confirm(data):
     nodes = sqlite3.connect("nodes.db").cursor()
@@ -56,10 +63,12 @@ def send_confirm(data):
 def confirm_coin(obj, data):
     db_ = sqlite3.connect("db.db")
     db = db_.cursor()
-    check = get_difficulty.get_difficulty(None, None)
+    check = sqlite3.connect("db.db").cursor()
+    check.execute("SELECT level FROM difficulty")
+    difficulty = check.fetchall()[0][0]
     db.execute("SELECT * FROM coins WHERE hash=?", [data['hash']])
-    if data['hash'].startswith("1"*check['difficulty']) and len(data['hash']) == 128 and not db.fetchall() and hashlib.sha512(data['starter']).hexdigest() == data['hash']:
-        db_.execute("UPDATE difficulty SET level=? WHERE level=?", [data['difficulty'], check['difficulty']])
+    if data['hash'].startswith("1"*int(difficulty)) and len(data['hash']) == 128 and not db.fetchall():
+        db_.execute("UPDATE difficulty SET level=? WHERE level=?", [data['difficulty'], difficulty])
         db_.execute("INSERT INTO coins (starter, hash, address) VALUES (?, ?, ?)", [data['starter'], data['hash'], data['address']])
         db_.commit()
     else:
