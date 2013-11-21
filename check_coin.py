@@ -49,6 +49,7 @@ def check_coin(obj, data):
 def send_confirm(data):
     nodes = sqlite3.connect("nodes.db").cursor()
     nodes = nodes.execute("SELECT ip, port FROM data WHERE relay=1 AND version=?", [config.version])
+    nodes = nodes.fetchall()
     for x in nodes:
         s = socket.socket()
         try:
