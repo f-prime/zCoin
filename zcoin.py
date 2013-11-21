@@ -122,7 +122,6 @@ if __name__ == "__main__":
             update = True
     except:
         print "Couldn't get current zCoin version from any of the brokers, they all must be down. I suggest you restart your client in a bit to check again."
-    print update
     if not update:
         wallet = sqlite3.connect("wallet.db")
         try:

@@ -30,7 +30,7 @@ class zCoinShell(cmd.Cmd):
         print "Fixed!"
     def help_fixdb(self, lines):
         print "Fixes broken or corrupted database files."
-    def help_update(self):
+    def help_update(self, lines):
         print "Update your zCoin files"
     def do_update(self, line):
         data = {
@@ -61,19 +61,19 @@ class zCoinShell(cmd.Cmd):
         wallet = sqlite3.connect("wallet.db").cursor()
         wallet.execute("SELECT address FROM data")
         return wallet.fetchall()[0][0]
-    def help_coins(self):
+    def help_coins(self, line):
         print "Displayes the coins that you own."
         print "Syntax: coins"
-    def help_send(self):
+    def help_send(self, line):
         print "Sends an amount of coins to a person."
         print "Syntax: send <address> <amount>"
-    def help_totalcoins(self):
+    def help_totalcoins(self, line):
         print "Displayes the amount of coins that exist on the network."
         print "Syntax: totalcoins"
-    def help_transactions(self):
+    def help_transactions(self, a):
         print "Displayes all transactions made over the network"
         print "Syntax: transactions <to>"
-    def help_addr(self):
+    def help_addr(self, a):
         print "Displayes your zCoin address."
         print "Syntax: addr"
     
