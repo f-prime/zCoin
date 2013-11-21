@@ -55,7 +55,10 @@ def send_coin_send(address, amount):
                  'for': address,
                  'starter': starter,
                  'hash': hash_}
-                send_coin_do(out)
+                if not send_coin_do(out):
+                    return "Coin sent successfully!"
+                else:
+                    return "You have invalid coins"
         else:
             return "Invalid Key"
     else:
@@ -84,7 +87,7 @@ def send_coin_do(out):
 
 def send_coin(obj, data):
     if hashlib.sha512(data['starter']).hexdigest() != data['hash']:
-        return
+        return "asd"
     db = sqlite3.connect('db.db')
     db.execute('UPDATE coins SET address=?, starter=? WHERE hash=?', [data['for'], data['starter'], data['hash']])
     db.execute("INSERT INTO transactions (to_, from_, hash) VALUES (?, ?, ?)", [data['for'], data['starter'], data['hash']])
