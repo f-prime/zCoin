@@ -57,6 +57,10 @@ class zCoinShell(cmd.Cmd):
         print send_coin.send_coin_send(line[0], line[1])
     def do_addr(self, line):    
         print "Your zCoin address is: "+self.addr()
+    def do_exit(self, line):
+        print "Bye!"
+
+        exit()
     def addr(self):
         wallet = sqlite3.connect("wallet.db").cursor()
         wallet.execute("SELECT address FROM data")
