@@ -32,6 +32,7 @@ def check_coin(obj, data):
                     key = re.findall("([0-9]*)", c[0])
                     key = filter(None, key)
                     key = PublicKey(int(key[0]), int(key[1]))
+                data['plain'] = data['starter']
                 data['starter'] = base64.b64encode(encrypt(str(data['starter']), key))
                 obj.send(json.dumps({"response":"Coin Confirmed!"}))
                 try:
@@ -67,7 +68,7 @@ def confirm_coin(obj, data):
     check.execute("SELECT level FROM difficulty")
     difficulty = check.fetchall()[0][0]
     db.execute("SELECT * FROM coins WHERE hash=?", [data['hash']])
-    if data['hash'].startswith("1"*int(difficulty)) and len(data['hash']) == 128 and not db.fetchall():
+    if data['hash'].startswith("1"*int(difficulty)) and len(data['hash']) == 128 and not db.fetchall() and hashlib.sha512(data['plain']).hexdigest() == data['hash']:
         db_.execute("UPDATE difficulty SET level=? WHERE level=?", [data['difficulty'], difficulty])
         db_.execute("INSERT INTO coins (starter, hash, address) VALUES (?, ?, ?)", [data['starter'], data['hash'], data['address']])
         db_.commit()
