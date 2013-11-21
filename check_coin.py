@@ -14,7 +14,7 @@ def check_coin(obj, data):
 
     """
     check = sqlite3.connect("db.db")
-    check.execute("SELECT * FROM coins WHERE hash=?")
+    check.execute("SELECT * FROM coins WHERE hash=?", [data['hash']])
     node = sqlite3.connect("nodes.db").cursor()
     c = node.execute("SELECT public FROM data WHERE address=?", [data['address']])
     c = c.fetchall()
