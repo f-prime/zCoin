@@ -35,6 +35,8 @@ def get_db_send():
     if not nodes:
         return
     nodes = nodes.fetchall()
+    if not nodes:
+        nodes = config.brokers
     random.shuffle(nodes)
     for x in nodes:
         
