@@ -87,8 +87,7 @@ def send_coin_do(out):
 
 
 def send_coin(obj, data):
-    if hashlib.sha512(data['starter']).hexdigest() != data['hash']:
-        return "asd"
+
     db = sqlite3.connect('db.db')
     db.execute('UPDATE coins SET address=?, starter=? WHERE hash=?', [data['for'], data['starter'], data['hash']])
     db.execute("INSERT INTO transactions (to_, from_, hash) VALUES (?, ?, ?)", [data['for'], data['starter'], data['hash']])
