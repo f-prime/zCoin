@@ -1,6 +1,9 @@
 import cmd
 import sqlite3
 import send_coin
+import get_nodes
+import get_db
+import urllib
 
 class zCoinShell(cmd.Cmd):
     prompt = "zShell$ "
@@ -20,6 +23,33 @@ class zCoinShell(cmd.Cmd):
         coins = sqlite3.connect("db.db").cursor()
         coins.execute("SELECT * FROM coins")
         print "There are "+str(len(coins.fetchall()))+" coins in existence."
+    def do_fixdb(self, line):
+        print "Fixing your broken databases..."
+        get_nodes.get_node_send(True)
+        get_db.get_db_send()
+        print "Fixed!"
+    def help_fixdb(self, lines):
+        print "Fixes broken or corrupted database files."
+    def help_update(self):
+        print "Update your zCoin files"
+    def do_update(self, line):
+        data = {
+            "check_coin.py":"https://raw.github.com/Max00355/zCoin/master/check_coin.py",
+            "config.py":"https://raw.github.com/Max00355/zCoin/master/config.py",
+            "get_db.py":"https://raw.github.com/Max00355/zCoin/master/get_db.py",
+            "get_difficulty.py":"https://raw.github.com/Max00355/zCoin/master/get_difficulty.py",
+            "get_version.py":"https://raw.github.com/Max00355/zCoin/master/get_nodes.py",
+            "register.py":"https://raw.github.com/Max00355/zCoin/master/register.py",
+            "send_coin.py":"https://raw.github.com/Max00355/zCoin/master/send_coin.py",
+            "zcoin.py":"https://raw.github.com/Max00355/zCoin/master/zcoin.py",
+            "shell.py":"https://raw.github.com/Max00355/zCoin/master/shell.py",    
+            }
+        for x in data:
+            print "Updating "+x
+            with open(x, 'wb') as file:
+                file.write(urllib.urlopen(data[x]).read())
+        print "Done! Restart your zCoin node please."
+
     def do_send(self, line):
         line = line.split() 
         to = line[0]

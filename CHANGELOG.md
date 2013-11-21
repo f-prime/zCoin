@@ -1,3 +1,10 @@
+0.1.4
+=====
+
+* Shell now has an update command
+* fixdb can be done from the shell
+* General bug fixes
+
 0.0.8
 =====
 
