@@ -57,9 +57,10 @@ def send_coin_send(address, amount):
                  'starter': starter,
                  'hash': hash_}
                 if not send_coin_do(out):
-                    return "Coin sent successfully!"
+                    continue
                 else:
                     return "You have invalid coins"
+            return "Coins sent successfully!"
         else:
             return "Invalid Key"
     else:
