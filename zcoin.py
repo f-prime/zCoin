@@ -129,6 +129,7 @@ if __name__ == "__main__":
         except:
             zCoin().first_run()
         if config.relay:
+            thread.start_new_thread(target=zCoin().non_relay, ())
             zCoin().relay()
         else:
             print "zCoin has started as a normal node."
