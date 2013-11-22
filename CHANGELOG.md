@@ -1,6 +1,7 @@
 0.1.5
 =====
 
+* Added DB locking to further prevent corruption.
 * Nodes now only communicate with nodes that are on the same version.
 
 

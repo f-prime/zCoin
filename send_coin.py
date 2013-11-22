@@ -6,6 +6,8 @@ import base64
 import re
 import hashlib
 import config
+import os
+import time
 
 def send_coin_send(address, amount):
     """
@@ -89,9 +91,12 @@ def send_coin_do(out):
 
 
 def send_coin(obj, data):
-
+    
+    while os.path.exists("db.lock"):
+        time.sleep(0.1)
+    open("db.lock", 'w')
     db = sqlite3.connect('db.db')
     db.execute('UPDATE coins SET address=?, starter=? WHERE hash=?', [data['for'], data['starter'], data['hash']])
     db.execute("INSERT INTO transactions (to_, from_, hash) VALUES (?, ?, ?)", [data['for'], data['starter'], data['hash']])
     db.commit()
-
+    os.remove("db.lock")

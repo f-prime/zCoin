@@ -7,6 +7,8 @@ import base64
 import sqlite3
 import config
 import re
+import os
+import time
 
 def check_coin(obj, data):
     """
@@ -70,9 +72,13 @@ def confirm_coin(obj, data):
     difficulty = check.fetchall()[0][0]
     db.execute("SELECT * FROM coins WHERE hash=?", [data['hash']])
     if data['hash'].startswith("1"*int(difficulty)) and len(data['hash']) == 128 and not db.fetchall() and hashlib.sha512(data['plain']).hexdigest() == data['hash']:
+        while os.path.exists("db.lock"):
+            time.sleep(0.1)
+        open("db.lock", 'w')
         db_.execute("UPDATE difficulty SET level=? WHERE level=?", [data['difficulty'], difficulty])
         db_.execute("INSERT INTO coins (starter, hash, address) VALUES (?, ?, ?)", [data['starter'], data['hash'], data['address']])
         db_.commit()
+        os.remove("db.lock")
     else:
         return
 

@@ -4,8 +4,13 @@ import config
 import random
 import sqlite3
 import get_nodes, get_db
+import os
+import time
 
 def register(obj, data):
+    while os.path.exists("nodes.lock"):
+        time.sleep(0.1)
+    open("nodes.lock", 'w')
     check = sqlite3.connect("nodes.db") 
     c = check.execute("SELECT * FROM data WHERE address=?", [data['address']])
     if c.fetchall():
@@ -13,6 +18,7 @@ def register(obj, data):
     else:
         check.execute("INSERT INTO data (address, ip, port, relay, public, version) VALUES (?, ?, ?, ?, ?, ?)", [data['address'], data['ip'], data['port'], data['relay'], data['public'], data['version']])
     check.commit()
+    os.remove("nodes.lock")
 
 def register_send(god=False):
     node = sqlite3.connect("nodes.db")

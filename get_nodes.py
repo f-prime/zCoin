@@ -6,6 +6,8 @@ import sqlite3
 import base64
 import hashlib
 import register, get_db
+import os
+import time
 
 def get_nodes(obj, data):
     with open("nodes.db", 'rb') as file:
@@ -73,5 +75,9 @@ def get_nodes_send(god=False):
                 else:
                     break
             if not no:
+                while os.path.exists("nodes.lock"):
+                    time.sleep(0.1)
+                open("nodes.lock", 'w')
                 with open("nodes.db", 'wb') as file:
                     file.write(out)
+                os.remove("nodes.lock")
