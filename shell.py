@@ -25,13 +25,9 @@ class zCoinShell(cmd.Cmd):
         print "There are "+str(len(coins.fetchall()))+" coins in existence."
     def do_fixdb(self, line):
         print "Fixing your broken databases..."
-        get_nodes.get_node_send(True)
+        get_nodes.get_nodes_send(True)
         get_db.get_db_send()
         print "Fixed!"
-    def help_fixdb(self, lines):
-        print "Fixes broken or corrupted database files."
-    def help_update(self, lines):
-        print "Update your zCoin files"
     def do_update(self, line):
         data = {
             "check_coin.py":"https://raw.github.com/Max00355/zCoin/master/check_coin.py",
@@ -66,22 +62,23 @@ class zCoinShell(cmd.Cmd):
         wallet = sqlite3.connect("wallet.db").cursor()
         wallet.execute("SELECT address FROM data")
         return wallet.fetchall()[0][0]
-    def help_coins(self, line):
-        print "Displayes the coins that you own."
-        print "Syntax: coins"
-    def help_send(self, line):
-        print "Sends an amount of coins to a person."
-        print "Syntax: send <address> <amount>"
-    def help_totalcoins(self, line):
-        print "Displayes the amount of coins that exist on the network."
-        print "Syntax: totalcoins"
-    def help_transactions(self, a):
-        print "Displayes all transactions made over the network"
-        print "Syntax: transactions <to>"
-    def help_addr(self, a):
-        print "Displayes your zCoin address."
-        print "Syntax: addr"
     
+    
+    def do_help(self, line):
+        print """
+
+        zCoin Commands
+
+        addr - Displays your zCoin address.
+        coins - Shows the amount of zCoins that you currently have.
+        totalcoins - Shows the amount of total zCoins on the network.
+        fixdb - If you are receiving any type of error about Sqlite3 run this command.
+        update - Updates your zCoin files. It is suggested that you run these every startup.
+        send <address> <amount> - Allows you to transfer coins to another wallet.
+        exit - Closes the zCoin shell
+
+        """
+
 if __name__ == "__main__":
     zCoinShell().cmdloop()
 
