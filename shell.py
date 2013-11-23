@@ -11,7 +11,12 @@ class zCoinShell(cmd.Cmd):
     def do_coins(self, line):
         coins = sqlite3.connect("db.db").cursor()
         coins.execute("SELECT * FROM coins WHERE address=?", [self.addr()])
-        print "You have "+str(len(coins.fetchall())) + " coins."
+        try:
+            print "You have "+str(len(coins.fetchall())) + " coins."
+        except sqlite3.DatabaseError:
+            self.do_fixdb(None)
+            slef.do_coins(None)
+
     def do_transactions(self, line):
         coins = sqlite3.connect("db.db").cursor()
         coins.execute("SELECT to_, from_, hash FROM transactions WHERE to_=?", [line])
@@ -22,7 +27,11 @@ class zCoinShell(cmd.Cmd):
     def do_totalcoins(self, line):
         coins = sqlite3.connect("db.db").cursor()
         coins.execute("SELECT * FROM coins")
-        print "There are "+str(len(coins.fetchall()))+" coins in existence."
+        try:
+            print "There are "+str(len(coins.fetchall()))+" coins in existence."
+        except sqlite3.DatabaseError:
+            self.do_fixdb(None)
+            self.do_totalcoins(None)
     def do_fixdb(self, line):
         print "Fixing your broken databases..."
         get_nodes.get_nodes_send(True)
