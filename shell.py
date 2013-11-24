@@ -15,7 +15,7 @@ class zCoinShell(cmd.Cmd):
             print "You have "+str(len(coins.fetchall())) + " coins."
         except sqlite3.DatabaseError:
             self.do_fixdb(None)
-            slef.do_coins(None)
+            self.do_coins(None)
 
     def do_transactions(self, line):
         coins = sqlite3.connect("db.db").cursor()
