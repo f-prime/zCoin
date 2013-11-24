@@ -50,9 +50,9 @@ class zCoin:
         wallet.commit()
         print "Registering with broker node..."
         register.register_send(True) 
-        print "Retreiving nodes db..."
+        print "Retrieving nodes db..."
         get_nodes.get_nodes_send(True)
-        print "Retreiving coins db..."
+        print "Retrieving coins db..."
         get_db.get_db_send()
         print "Syncing with network..."
         register.register_send()
