@@ -49,6 +49,7 @@ class zCoinShell(cmd.Cmd):
             "send_coin.py":"https://raw.github.com/Max00355/zCoin/master/send_coin.py",
             "zcoin.py":"https://raw.github.com/Max00355/zCoin/master/zcoin.py",
             "shell.py":"https://raw.github.com/Max00355/zCoin/master/shell.py",    
+            "miner.py":"https://raw.github.com/Max00355/zCoin/master/miner.py",
             }
         for x in data:
             print "Updating "+x

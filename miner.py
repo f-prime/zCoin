@@ -35,7 +35,7 @@ def check_coin(data):
     for x in node:
         s = socket.socket()
         try:
-            s.settimeout(1)
+            s.settimeout(60)
             s.connect((x[0], x[1]))
         except:
             s.close()

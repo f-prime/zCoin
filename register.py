@@ -42,7 +42,7 @@ def register_send(god=False):
     for x in nodes:
         s = socket.socket()
         try:
-            s.settimeout(10)
+            s.settimeout(60)
             s.connect((x[0], x[1]))
         except:
             s.close()
