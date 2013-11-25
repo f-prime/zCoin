@@ -81,3 +81,4 @@ def get_nodes_send(god=False):
                 with open("nodes.db", 'wb') as file:
                     file.write(out)
                 os.remove("nodes.lock")
+                break

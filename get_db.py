@@ -84,3 +84,4 @@ def get_db_send():
                 with open("db.db", 'wb') as file:
                     file.write(out)
                 os.remove("db.lock")
+                break
