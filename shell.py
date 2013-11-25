@@ -55,7 +55,7 @@ class zCoinShell(cmd.Cmd):
             print "Updating "+x
             with open(x, 'wb') as file:
                 file.write(urllib.urlopen(data[x]).read())
-        print "Done! Restart your zCoin node please."
+        print "Done!"
 
     def do_send(self, line):
         line = line.split() 

@@ -1,3 +1,6 @@
+import shell
+update = shell.zCoinShell()
+update.do_update(None)
 import socket
 import json
 from rsa import *
