@@ -138,6 +138,7 @@ if __name__ == "__main__":
             if config.relay:
                 check.execute("UPDATE data SET version=? WHERE address=?", [address])
         if config.relay:
+            register.register_send()
             thread.start_new_thread(zCoin().non_relay, ())
             zCoin().relay()
         else:
