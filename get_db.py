@@ -44,7 +44,7 @@ def get_db_send():
         
         s = socket.socket()
         try:
-            s.settimeout(1)
+            s.settimeout(120)
             s.connect((x[0], x[1]))
         except:
             s.close()
