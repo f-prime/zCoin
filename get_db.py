@@ -14,6 +14,10 @@ def get_db(obj, data):
     db.execute("CREATE TABLE IF NOT EXISTS difficulty (level INT default 7)")
     db.execute("CREATE TABLE IF NOT EXISTS coins (hash TEXT, address TEXT, starter TEXT)")
     db.execute("CREATE TABLE IF NOT EXISTS transactions (to_ TEXT, from_ TEXT, hash TEXT)")
+    try:
+        db.execute("SELECT * FROM coins")
+    except sqlite3.DatabaseError:
+        return
     with open("db.db", 'rb') as file:
         while True:
             x = file.read(100)

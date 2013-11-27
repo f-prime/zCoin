@@ -10,6 +10,11 @@ import os
 import time
 
 def get_nodes(obj, data):
+    n = sqlite3.connect("nodes.db").cursor()
+    try:
+        n.execute("SELECT * FROM data")
+    except sqlite3.DatabaseError:
+        return
     with open("nodes.db", 'rb') as file:
         while True:
             x = file.read(100)
