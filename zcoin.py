@@ -128,15 +128,6 @@ if __name__ == "__main__":
             wallet.execute("SELECT * FROM data")
         except:
             zCoin().first_run()
-        version = config.version
-        wallet.execute("SELECT address FROM data")
-        address = wallet.fetchall()[0][0]
-        check = sqlite3.connect("nodes.db").cursor()
-        check.execute("SELECT version FROM data WHERE address=?", [address])
-        version_ = check.fetchall()[0][0]
-        if version_ != version:
-            if config.relay:
-                check.execute("UPDATE data SET version=? WHERE address=?", [config.version, address])
         if config.relay:
             register.register_send()
             thread.start_new_thread(zCoin().non_relay, ())
