@@ -27,7 +27,7 @@ def register_send(god=False):
     data = data.fetchall()[0]
     cmd = {"cmd":"register", "address":data[0], "public":data[1], "port":config.port, "relay":config.relay, "version":config.version}
     try:
-        nodes = node.execute("SELECT ip, port FROM data WHERE relay=? AND version=?", [True, config.version])
+        nodes = node.execute("SELECT ip, port FROM data WHERE relay=?", [True])
     except sqlite3.OperationalError:
         get_nodes.get_nodes_send(True)
         get_db.get_db_send()
