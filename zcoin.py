@@ -123,11 +123,20 @@ if __name__ == "__main__":
     except:
         print "Couldn't get current zCoin version from any of the brokers, they all must be down. I suggest you restart your client in a bit to check again."
     if not update:
-        wallet = sqlite3.connect("wallet.db")
+        wallet = sqlite3.connect("wallet.db").cursor()
         try:
             wallet.execute("SELECT * FROM data")
         except:
             zCoin().first_run()
+        version = config.version
+        wallet.execute("SELECT address FROM data")
+        address = wallet.fetchall()[0][0]
+        check = sqlite3.connect("nodes.db").cursor()
+        check.execute("SELECT version FROM data WHERE address=?", [address])
+        version_ = check.fetchall()[0][0]
+        if version_ != version:
+            if config.relay:
+                check.execute("UPDATE data SET version=? WHERE address=?", [address])
         if config.relay:
             thread.start_new_thread(zCoin().non_relay, ())
             zCoin().relay()
