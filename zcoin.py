@@ -94,7 +94,6 @@ class zCoin:
         
         get_nodes.get_nodes_send()
         get_db.get_db_send()
-        register.register_send()
         sock = socket.socket()
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind((config.host, config.port))
@@ -130,7 +129,6 @@ if __name__ == "__main__":
             zCoin().first_run()
         if config.relay:
             register.register_send()
-            thread.start_new_thread(zCoin().non_relay, ())
             zCoin().relay()
         else:
             print "zCoin has started as a normal node."
