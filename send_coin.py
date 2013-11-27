@@ -72,7 +72,7 @@ def send_coin_send(address, amount):
 def send_coin_do(out):
     node = sqlite3.connect('nodes.db').cursor()
     to_send = json.dumps(out)
-    node.execute('SELECT ip, port FROM data WHERE relay=1 AND version=?', [config.version])
+    node.execute('SELECT ip, port FROM data WHERE relay=1')
     nodes = node.fetchall()
     if not nodes:
         return
