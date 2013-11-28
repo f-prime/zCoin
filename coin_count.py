@@ -19,8 +19,9 @@ def send():
     out = send_command.send({"cmd":"coin_count"}, out=True)
     try:
         out = json.loads(out)
-    except ValueError:
-        send()
+    except:
+        print "Couldn't get number of coins, if this persists please reset."
+        return
     else:
         print out
         if out['coins'] > coins:
