@@ -2,6 +2,7 @@ import config
 import cmd
 import send_coin
 import threading
+import urllib
 
 class zc(cmd.Cmd):
     prompt = "zShell$ "
@@ -12,7 +13,7 @@ class zc(cmd.Cmd):
             to = line[0]
             amount = line[1]
         except:
-            self.do_help()
+            self.do_help(None)
         else:
             print "Coins are being sent"
             threading.Thread(target=send_coin.send, args=(to, amount)).start()
@@ -42,7 +43,7 @@ class zc(cmd.Cmd):
     def do_transactions(self, line):
         line = line.split()
         if not line:
-            self.do_help()
+            self.do_help(None)
         else:
             data = config.db.find("transactions", {"from":line})
             if not data:
@@ -56,6 +57,32 @@ class zc(cmd.Cmd):
 
                     """.format(x['transid'], x['to'], x['amount'])
                     print a
+
+
+    def do_update(self, line):
+        files = {
+            "check_coin.py":"https://raw.github.com/Max00355/zCoin/master/check_coin.py",
+            "coin_count.py":"https://raw.github.com/Max00355/zCoin/master/coin_count.py",
+            "config.py":"https://raw.github.com/Max00355/zCoin/master/config.py",
+            "get_db.py":"https://raw.github.com/Max00355/zCoin/master/get_db.py",
+            "get_difficulty.py":"https://raw.github.com/Max00355/zCoin/master/get_difficulty.py",
+            "get_nodes.py":"https://raw.github.com/Max00355/zCoin/master/get_nodes.py",
+            "get_version.py":"https://raw.github.com/Max00355/zCoin/master/get_version.py",
+            "landerdb.py":"https://raw.github.com/Max00355/zCoin/master/landerdb.py",
+            "miner.py":"https://raw.github.com/Max00355/zCoin/master/miner.py",
+            "register.py":"https://raw.github.com/Max00355/zCoin/master/register.py",
+            "send_coin.py":"https://raw.github.com/Max00355/zCoin/master/send_coin.py",
+            "send_command.py":"https://raw.github.com/Max00355/zCoin/master/send_command.py",
+            "shell.py":"https://raw.github.com/Max00355/zCoin/master/shell.py",
+            "zcoin.py":"https://raw.github.com/Max00355/zCoin/master/zcoin.py",
+
+        }
+
+        for x in files:
+            print "Updating: "+x
+            with open(x,'wb') as file:
+                file.write(urllib.urlopen(files[x])).read())
+
 
     def do_help(self, line):
         print """
