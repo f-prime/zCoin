@@ -35,6 +35,10 @@ class zc(cmd.Cmd):
             coins = len(coins)
         print "You have "+str(coins)+" coins."
 
+    def do_addr(self, lines):
+        addr = config.wallet.find("data", "all")[0]['addr']
+        print "Your address is: "+addr
+
     def do_transactions(self, line):
         line = line.split()
         if not line:
@@ -63,6 +67,8 @@ class zc(cmd.Cmd):
             totalcoins - Shows total coins on the network
             transactions <addr> - Shows transactions made from an address
             update - Updates the source code
+            addr - Displays your address
+            
 
         """
 
