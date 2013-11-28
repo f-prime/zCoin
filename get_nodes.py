@@ -14,6 +14,8 @@ def count_send():
         mine = len(mine)
     print mine
     check = send_command.send({"cmd":"get_nodes_count"}, out=True)
+    if not check:
+        return
     check = json.loads(check)
     if check['nodes'] > mine:
         send()
