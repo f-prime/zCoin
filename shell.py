@@ -3,6 +3,7 @@ import cmd
 import send_coin
 import threading
 import urllib
+import get_db
 
 class zc(cmd.Cmd):
     prompt = "zShell$ "
@@ -17,7 +18,9 @@ class zc(cmd.Cmd):
         else:
             print "Coins are being sent"
             threading.Thread(target=send_coin.send, args=(to, amount)).start()
-
+    
+    def do_check(self, lines):
+        get_db.send()
     def do_totalcoins(self, line):
         coin = config.db.find("coins", "all")
         if not coin:
@@ -83,7 +86,7 @@ class zc(cmd.Cmd):
             with open(x,'wb') as file:
                 file.write(urllib.urlopen(files[x]).read())
 
-
+    
     def do_help(self, line):
         print """
             
@@ -95,7 +98,7 @@ class zc(cmd.Cmd):
             transactions <addr> - Shows transactions made from an address
             update - Updates the source code
             addr - Displays your address
-            
+            check - Updates db.db manually. Useful when expecting payments
 
         """
 

@@ -73,7 +73,7 @@ def send_coin(obj, data):
     for x in check:
         config.db.remove("coins", x)
         config.db.save()
-    config.db.insert("coins",{"address":data['for'], "starter":data['starter'], "hash":data['hash']})
+    config.db.insert("coins",{"address":data['for'], "starter":data['starter'], "hash":data['hash'], "difficulty":data['difficulty']})
     config.db.save()
     os.remove("db.lock")
 
