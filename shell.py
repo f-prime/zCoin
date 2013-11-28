@@ -37,7 +37,7 @@ class zc(cmd.Cmd):
         print "You have "+str(coins)+" coins."
 
     def do_addr(self, lines):
-        addr = config.wallet.find("data", "all")[0]['addr']
+        addr = config.wallet.find("data", "all")[0]['address']
         print "Your address is: "+addr
 
     def do_transactions(self, line):
