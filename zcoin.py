@@ -80,6 +80,7 @@ class zCoin:
                         obj.close()
 
     def normal(self):
+        get_db.send()
         register.send()
         while True:
             coin_count.send()
