@@ -81,7 +81,7 @@ class zc(cmd.Cmd):
         for x in files:
             print "Updating: "+x
             with open(x,'wb') as file:
-                file.write(urllib.urlopen(files[x])).read())
+                file.write(urllib.urlopen(files[x]).read())
 
 
     def do_help(self, line):
