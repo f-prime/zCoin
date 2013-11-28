@@ -4,7 +4,7 @@ import random
 import string
 import json
 from hashlib import sha512
-import threading
+import multiprocessing
 
 def mine():
     while True:
@@ -23,4 +23,4 @@ def mine():
                 on += 1
 
 for x in range(15):
-    threading.Thread(target=mine).start()
+    multiprocessing.Process(target=mine).start()
