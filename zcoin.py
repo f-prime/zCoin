@@ -95,7 +95,7 @@ if __name__ == "__main__":
         zc.firstrun()
     if config.relay:
         print "zCoin started as a relay node."
-        thread.start_new_thread(normal, ())
+        thread.start_new_thread(zc.normal, ())
         zc.relay()
     else:
         print "zCoin started as a normal node."
