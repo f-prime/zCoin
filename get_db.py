@@ -2,90 +2,56 @@ import socket
 import json
 import config
 import random
-import sqlite3
-import base64
-import hashlib
-import register, get_nodes
-import time
 import os
+import time
 
 def get_db(obj, data):
-    db = sqlite3.connect("db.db").cursor()
-    db.execute("CREATE TABLE IF NOT EXISTS difficulty (level INT default 7)")
-    db.execute("CREATE TABLE IF NOT EXISTS coins (hash TEXT, address TEXT, starter TEXT)")
-    db.execute("CREATE TABLE IF NOT EXISTS transactions (to_ TEXT, from_ TEXT, hash TEXT)")
-    try:
-        db.execute("SELECT * FROM coins")
-    except sqlite3.DatabaseError:
-        return
     with open("db.db", 'rb') as file:
         while True:
-            x = file.read(100)
-            if not x:
+            data = file.read(100)
+            if not data:
                 break
-            md5sum = hashlib.md5(x).hexdigest()
-            out = base64.b64encode(x)
-            x = json.dumps({"md5sum":md5sum, "data":out})
-            obj.send(x)
+            obj.send(data)
 
-def get_db_send():
-    node = sqlite3.connect("nodes.db")
-    cmd = {"cmd":"get_db"}
-    try:
-        nodes = node.execute("SELECT ip, port FROM data WHERE relay=? AND version=?", [True, config.version])
-    except sqlite3.OperationalError:
-        get_nodes.get_nodes_send(True)
-        get_db_send()
-        register.register_send()
-        return
-    if not nodes:
-        return
-    nodes = nodes.fetchall()
-    if not nodes:
+def send(god=False):
+    if god:
         nodes = config.brokers
-    random.shuffle(nodes)
+    else:
+        nodes = config.nodes.find("nodes", {"relay":1})
+        random.shuffle(nodes)
     for x in nodes:
-        
         s = socket.socket()
         try:
-            s.settimeout(120)
-            s.connect((x[0], x[1]))
+            s.connect((x['ip'], x['port']))
         except:
             s.close()
             continue
         else:
-            s.send(json.dumps(cmd))
-            out = ""
-            current = ""
-            no = False
-            while True:
+            s.send(json.dumps({"cmd":"get_version"}))
+            data = s.recv(1024)
+            if data == config.version:
+                s.close()
+                s = socket.socket()
                 try:
-                    data = s.recv(1)
+                    s.connect((x['ip'], x['port']))
                 except:
-                    no = True
-                    break
-                if data:
-                    current = current + data
-                    if data != "}":
-                        continue
-                    try:
-                        data = json.loads(current)
-                    except ValueError:
-                        break
-                    else:
-                        current = ""
-                        check = base64.b64decode(data['data'])
-                        if hashlib.md5(check).hexdigest() == data['md5sum']:
-                            out = out + check
-                        else:
-                            break
+                    s.close()
+                    continue
                 else:
+                    s.send(json.dumps({"cmd":"get_db"}))
+                    out = ""
+                    while True:
+                        data = s.recv(1024)
+                        if not data:
+                            break
+                        out = out + data
+                    while os.path.exists("db.lock"):
+                        time.sleep(0.1)
+                    open("db.lock", 'w').close()
+                    with open("db.db", 'wb') as file:
+                        file.write(out)
+                    os.remove("db.lock")
                     break
-            if not no:
-                while os.path.exists("db.lock"):
-                    time.sleep(0.1)
-                open("db.lock", 'w')
-                with open("db.db", 'wb') as file:
-                    file.write(out)
-                os.remove("db.lock")
-                break
+            else:
+                s.close()
+

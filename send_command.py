@@ -2,18 +2,8 @@ import socket
 import json
 import config
 import random
-import os
-import time
 
-def get_nodes(obj, data):
-    with open("nodes.db", 'rb') as file:
-        while True:
-            data = file.read(100)
-            if not data:
-                break
-            obj.send(data)
-
-def send(god=False):
+def send(cmd, out=False, god=False):
     if god:
         nodes = config.brokers
     else:
@@ -38,20 +28,16 @@ def send(god=False):
                     s.close()
                     continue
                 else:
-                    s.send(json.dumps({"cmd":"get_nodes"}))
+                    s.send(json.dumps(cmd))
                     out = ""
                     while True:
                         data = s.recv(1024)
                         if not data:
                             break
                         out = out + data
-                    while os.path.exists("nodes.lock"):
-                        time.sleep(0.1)
-                    open("nodes.lock", 'w').close()
-                    with open("nodes.db", 'wb') as file:
-                        file.write(out)
-                    os.remove("nodes.lock")
-                    break
+                    s.close()
+                    if out:
+                        return out
             else:
                 s.close()
 
