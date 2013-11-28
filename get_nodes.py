@@ -4,6 +4,27 @@ import config
 import random
 import os
 import time
+import send_command
+
+def count_send():
+    mine = config.nodes.find("nodes", "all")
+    if not mine:
+        mine = 0
+    else:
+        mine = len(mine)
+    print mine
+    check = send_command.send({"cmd":"get_nodes_count"}, out=True)
+    check = json.loads(check)
+    if check['nodes'] > mine:
+        send()
+
+def count(obj, data):
+    co = config.nodes.find("nodes", "all")
+    if not co:
+        co = 0
+    else:
+        co = len(co)
+    obj.send(json.dumps({"nodes":co}))
 
 def get_nodes(obj, data):
     with open("nodes.db", 'rb') as file:

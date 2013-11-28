@@ -27,6 +27,7 @@ class zCoin:
             "get_difficulty":get_difficulty.get_difficulty,
             "check_coin":check_coin.check_coin,
             "send_coin":send_coin.send_coin,
+            "get_nodes_count":get_nodes.count,
             }
 
     def firstrun(self):
@@ -85,8 +86,7 @@ class zCoin:
             register.send()
         while True:
             coin_count.send()
-            if not config.relay:
-                get_nodes.send()
+            get_nodes.count_send()
             time.sleep(60)
 if __name__ == "__main__":
     zc = zCoin()
