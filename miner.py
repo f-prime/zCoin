@@ -10,15 +10,14 @@ def mine():
     diff = send_command.send({"cmd":"get_difficulty"}, out=True)
     diff = json.loads(diff)['difficulty']
     on = 0
-    print starter
-    print diff
     while True:
         check = starter + str(on)
-        #print check
+        print check
         if sha512(check).hexdigest().startswith("1"*diff):
-            send_command.send({"cmd":"check_coin", "address":raw_input("Address: "), "starter":starter+str(on), "hash":sha512(check).hexdigest()})
+            send_command.send({"cmd":"check_coin", "address":config.wallet.find("data", "all")[0]['address'], "starter":starter+str(on), "hash":sha512(check).hexdigest()})
+            break
         else:
             on += 1
-
+    mine()
 
 mine()
