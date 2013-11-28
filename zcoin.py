@@ -80,11 +80,13 @@ class zCoin:
                         obj.close()
 
     def normal(self):
-        get_db.send()
-        register.send()
+        if not config.relay:
+            get_db.send()
+            register.send()
         while True:
             coin_count.send()
-            get_nodes.send()
+            if not config.relay:
+                get_nodes.send()
             time.sleep(60)
 if __name__ == "__main__":
     zc = zCoin()
@@ -93,6 +95,7 @@ if __name__ == "__main__":
         zc.firstrun()
     if config.relay:
         print "zCoin started as a relay node."
+        thread.start_new_thread(normal, ())
         zc.relay()
     else:
         print "zCoin started as a normal node."
