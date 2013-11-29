@@ -4,11 +4,13 @@ import send_coin
 import threading
 import urllib
 import get_db
+import sys
 
 class zc(cmd.Cmd):
     prompt = "zShell$ "
     intro = "Welcome to the zCoin shell, type `help` to get started."
     def do_send(self, line):
+        self.lastcmd = ""
         line = line.split()
         try:
             to = line[0]
@@ -18,8 +20,10 @@ class zc(cmd.Cmd):
         else:
             print "Coins are being sent"
             threading.Thread(target=send_coin.send, args=(to, amount)).start()
-    
+            print("zShell$"),
+
     def do_check(self, lines):
+        self.lastcmd = ""
         get_db.send()
     def do_totalcoins(self, line):
         coin = config.db.find("coins", "all")
@@ -63,6 +67,7 @@ class zc(cmd.Cmd):
 
 
     def do_update(self, line):
+        self.lastcmd = ""
         files = {
             "check_coin.py":"https://raw.github.com/Max00355/zCoin/master/check_coin.py",
             "coin_count.py":"https://raw.github.com/Max00355/zCoin/master/coin_count.py",

@@ -53,7 +53,7 @@ def send(address, amount):
                     "plain":x['starter'],
                     "difficulty":x['difficulty'],
                     }
-            print out_s 
+
             send_command.send(out_s)
         print "Coins sent!"
 

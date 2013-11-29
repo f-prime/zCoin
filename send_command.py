@@ -19,7 +19,6 @@ def send(cmd, out=False, god=False):
             s.close()
             continue
         else:
-            print x['ip'], str(x['port'])
             s.send(json.dumps({"cmd":"get_version"}))
             data = s.recv(1024)
             if data == config.version:
