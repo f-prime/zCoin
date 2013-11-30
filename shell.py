@@ -83,6 +83,7 @@ class zc(cmd.Cmd):
             "send_command.py":"https://raw.github.com/Max00355/zCoin/master/send_command.py",
             "shell.py":"https://raw.github.com/Max00355/zCoin/master/shell.py",
             "zcoin.py":"https://raw.github.com/Max00355/zCoin/master/zcoin.py",
+            "zcoingui.py":"https://raw.github.com/Max00355/zCoin/master/zcoingui.py",
 
         }
 

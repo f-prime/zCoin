@@ -88,7 +88,8 @@ class zCoin:
             coin_count.send()
             get_nodes.count_send()
             time.sleep(60)
-if __name__ == "__main__":
+
+def run():
     zc = zCoin()
     check = config.nodes.find("nodes", "all")
     if not check:
@@ -100,4 +101,6 @@ if __name__ == "__main__":
     else:
         print "zCoin started as a normal node."
         zc.normal()
-    
+
+if __name__ == "__main__":
+    run()
