@@ -3,6 +3,7 @@ import json
 import config
 import os
 import time
+import send_command
 
 def register(obj, data):
     while os.path.exists("nodes.lock"):
@@ -18,27 +19,5 @@ def register(obj, data):
     os.remove("nodes.lock")
 
 def send():
-    nodes = config.nodes.find("nodes", {"relay":1})
-    for x in nodes:
-        s = socket.socket()
-        try:
-            s.connect((x['ip'], x['port']))
-        except:
-            continue
-        else:
-            s.send(json.dumps({"cmd":"get_version"}))
-            data = s.recv(1024)
-            s.close()
-            if data == config.version:
-                s = socket.socket()
-                try:
-                    s.connect((x['ip'], x['port']))
-                except:
-                    continue
-                else:
-                    data = config.wallet.find("data", "all")[0]
-                    s.send(json.dumps({"cmd":"register", "relay":config.relay, "public":data['public'], "address":data['address'], "port":config.port}))
-                    s.close()
-                    break
-            else:
-                s.close()
+    data = config.wallet.find("data", "all")[0]
+    send_command.send({"cmd":"register", "relay":config.relay, "public":data['public'], "address":data['address'], "port":config.port})
