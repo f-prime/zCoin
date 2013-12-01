@@ -40,6 +40,7 @@ def send(address, amount):
             return
         cc = cc[:amount]
         transactionid = uuid.uuid4().hex
+        sent_ = 0
         for x in cc:
             starter, hash_ = x['starter'], x['hash']
             starter = base64.b64encode(encrypt(decrypt(base64.b64decode(starter), my_key), key))
@@ -55,6 +56,8 @@ def send(address, amount):
                     }
 
             send_command.send(out_s)
+            sent_ += 1
+            print str(sent_)+" coins sent."
         print "Coins sent!"
 
 
