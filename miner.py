@@ -5,6 +5,8 @@ import string
 import json
 from hashlib import sha512
 import multiprocessing
+import os
+import threading
 
 def mine():
     while True:
@@ -23,4 +25,7 @@ def mine():
                 on += 1
 
 for x in range(15):
-    multiprocessing.Process(target=mine).start()
+    if os.name != "nt":
+        multiprocessing.Process(target=mine).start()
+    else:
+        threading.Thread(target=mine).start()
