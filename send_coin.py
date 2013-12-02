@@ -57,7 +57,7 @@ def send(address, amount):
 
             send_command.send(out_s)
             sent_ += 1
-            print str(sent_)+" coins sent."
+            print str(sent_)+" coins sent to "+address
         print "Coins sent!"
 
 
