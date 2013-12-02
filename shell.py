@@ -4,13 +4,12 @@ import send_coin
 import threading
 import urllib
 import get_db
-import sys
+import operator
 
 class zc(cmd.Cmd):
     prompt = "zShell$ "
     intro = "Welcome to the zCoin shell, type `help` to get started."
     def do_send(self, line):
-        self.lastcmd = ""
         line = line.split()
         try:
             to = line[0]
@@ -20,18 +19,17 @@ class zc(cmd.Cmd):
         else:
             print "Coins are being sent"
             threading.Thread(target=send_coin.send, args=(to, amount)).start()
-            print("zShell$"),
-
+    
     def do_check(self, lines):
-        self.lastcmd = ""
         get_db.send()
+
     def do_totalcoins(self, line):
         coin = config.db.find("coins", "all")
         if not coin:
             coin = 0
         else:
             coin = len(coin)
-        print "Ther are "+str(coin)+" coins in existence."
+        print "There are "+str(coin)+" coins in existence."
 
     def do_coins(self, line):
         addr = config.wallet.find("data", "all")[0]
@@ -67,7 +65,6 @@ class zc(cmd.Cmd):
 
 
     def do_update(self, line):
-        self.lastcmd = ""
         files = {
             "check_coin.py":"https://raw.github.com/Max00355/zCoin/master/check_coin.py",
             "coin_count.py":"https://raw.github.com/Max00355/zCoin/master/coin_count.py",
@@ -83,7 +80,6 @@ class zc(cmd.Cmd):
             "send_command.py":"https://raw.github.com/Max00355/zCoin/master/send_command.py",
             "shell.py":"https://raw.github.com/Max00355/zCoin/master/shell.py",
             "zcoin.py":"https://raw.github.com/Max00355/zCoin/master/zcoin.py",
-            "zcoingui.py":"https://raw.github.com/Max00355/zCoin/master/zcoingui.py",
 
         }
 
@@ -92,6 +88,42 @@ class zc(cmd.Cmd):
             with open(x,'wb') as file:
                 file.write(urllib.urlopen(files[x]).read())
 
+    def do_stats(self, line):
+        coins = config.db.find("coins", "all")
+        trans = config.db.find("transactions","all")
+        
+        if not coins or not trans:
+            print "Error working out stats"
+        else:
+            total = len(coins)
+            coincounts = {}
+            recievercounts = {}
+            sendercounts = {}
+
+            for coin in coins:
+                try:
+                    coincounts[coin['address']] += 1
+                except:
+                    coincounts[coin['address']] = 1
+            for tran in trans:
+                try:
+                    recievercounts[tran['to']] += tran['amount']
+                    sendercounts[tran['from']] += tran['amount']
+                except:
+                    recievercounts[tran['to']] = tran['amount']
+                    sendercounts[tran['from']] = tran['amount']
+
+            print "\nAddress".ljust(52),"Amt".ljust(len(str(total))),"%","\n","-"*63
+            for address,count in sorted(coincounts.iteritems(), key=operator.itemgetter(1), reverse=True):
+                print '%s %s %.2f%%'%(address.ljust(51), str(count).ljust(len(str(total))), (float(count)/float(total))*100)
+
+            print "\nReceivers".ljust(52),"Trans Count","\n","-"*63
+            for to,count in sorted(recievercounts.iteritems(), key=operator.itemgetter(1), reverse=True):
+                print to.ljust(51),count
+
+            print "\nSenders".ljust(52),"Trans Count","\n","-"*63
+            for to,count in sorted(sendercounts.iteritems(), key=operator.itemgetter(1), reverse=True):
+                print to.ljust(51),count
     
     def do_help(self, line):
         print """
@@ -105,6 +137,7 @@ class zc(cmd.Cmd):
             update - Updates the source code
             addr - Displays your address
             check - Updates db.db manually. Useful when expecting payments
+            stats - Get basic % counts and transaction info
 
         """
 
