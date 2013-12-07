@@ -102,5 +102,6 @@ def run():
         print "zCoin started as a normal node."
         zc.normal()
 
+
 if __name__ == "__main__":
     run()
